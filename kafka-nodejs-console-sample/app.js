@@ -48,41 +48,17 @@ if (process.env.VCAP_SERVICES) {
     opts.calocation = '/etc/ssl/certs';
     
 } else {
-    // Running locally on development machine
-    console.log("Using command line arguments to find credentials.");
+    console.log('ERROR: It appears the application is running is running without VCAP_SERVICES.');
+    process.exit(-1);
+}
 
-    if (process.argv.length < 5) {
-        console.log('ERROR: It appears the application is running is running without VCAP_SERVICES but the arguments are incorrect for local mode.');
-        console.log('\nUsage:\n' +
-            'node ' + process.argv[1] + ' <kafka_brokers_sasl> <api_key> <cert_location> [ -consumer | -producer ]\n');
-        process.exit(-1);
-    }
-
-    opts.brokers = process.argv[2];
-    var apiKey = process.argv[3];
-    if (apiKey.indexOf(":") != -1) {
-        var credentialArray = apiKey.split(":");
-        opts.api_key = credentialArray[1];
-    } else {
-        opts.api_key = apiKey;
-    }
-    
-    // IBM Cloud/Ubuntu: '/etc/ssl/certs'
-    // Red Hat: '/etc/pki/tls/cert.pem',
-    // macOS: '/usr/local/etc/openssl/cert.pem' from openssl installed by brew
-    opts.calocation = process.argv[4];
-    if (! fs.existsSync(opts.calocation)) {
-        console.error('Error - Failed to access <cert_location> : ' + opts.calocation);
-        process.exit(-1);
-    }
-
-    // In local mode the app can run only the producer or only the consumer
-    if (process.argv.length === 6) {
-        if ('-consumer' === process.argv[5])
-            runProducer = false;
-        if ('-producer' === process.argv[5])
-            runConsumer = false;
-    }
+var topicName = 'kafka-nodejs-console-sample-topic';
+if (process.argv.length > 2) {
+    console.log(JSON.stringify(process.argv));
+    topicName = process.argv[2];
+    console.log('Using custom topic name: ' + topicName);
+} else {
+    console.log('Using default topic name: ' + topicName);
 }
 
 console.log("Kafka Endpoints: " + opts.brokers);
