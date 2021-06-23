@@ -24,9 +24,11 @@ RUN  apt-get update -qqy \
 
 WORKDIR /usr/src/app
 
-COPY *.js *.json *.md /usr/src/app/
-
+COPY package*.json /usr/src/app/
 RUN npm install -d
 ENV LD_LIBRARY_PATH=/usr/src/app/node_modules/node-rdkafka/build/deps
+
+COPY *.js *.json *.md /usr/src/app/
+
 ENTRYPOINT [ "node", "app.js" ]
-CMD [ "" ]
+CMD [ ]
