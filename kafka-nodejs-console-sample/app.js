@@ -48,7 +48,7 @@ if (process.env.VCAP_SERVICES) {
     opts.calocation = '/etc/ssl/certs';
     
 } else {
-    console.log('ERROR: It appears the application is running is running without VCAP_SERVICES.');
+    console.log('ERROR: It appears the application is running without VCAP_SERVICES.');
     process.exit(-1);
 }
 
